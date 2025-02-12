@@ -1,0 +1,77 @@
+/* valStyle.css */
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: #C8A2C8;
+}
+.navbar {
+    text-align: right;
+    background-color: #9966CC;
+    padding: 30px;      
+}
+#question {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 50px;
+}
+.navbar a {
+    color: #F8F6F0;
+    text-decoration: none;
+    padding-right: 100px;
+    margin-right: 10px;
+    margin: 0 15px;
+    font-size: 20px;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+.navbar a.active {
+    background-color: #F8F6F0;
+    color: #9966CC;
+    font-weight: bold;
+}
+.gif-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.container {
+    margin-top: 50px;
+}
+.buttons {
+    margin-top: 20px;
+}
+button {
+    font-size: 20px;
+    padding: 10px 20px;
+    margin: 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+#yesBtn {
+    background-color: #9966CC;
+    color: #F8F6F0;
+}
+#noBtn {
+    background-color: #6c757d;
+    color: #F8F6F0;
+}
+
+.filmstrip {
+    display: flex;
+    overflow: hidden;
+    width: 300px;
+    margin: auto;
+    border: 5px solid black;
+    padding: 10px;
+    background-color: white;
+}
+.filmstrip img {
+    width: 100px;
+    margin-right: 10px;
+    animation: filmMove 5s infinite linear;
+}
+@keyframes filmMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}

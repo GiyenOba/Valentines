@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You be my Valentine?</title>
+    <link rel="stylesheet" href="valStyle.css" />
+</head>
+<body>
+    <div class="navbar">
+        <a href="#home" class="nav-link active" id="homeLink" onclick="setActive(this)">Home</a>
+        <a href="#trina" class="nav-link" id="trinaLink" onclick="setActive(this)" style="pointer-events: none; opacity: 0.5;">Trina</a>
+    </div>
+    
+    <div id="home" class="container">
+        <h1 id="question">Can you be my Valentine?</h1>
+        <div class="gif-container">
+            <div id="gif">
+                <iframe src="https://tenor.com/embed/12962892" width="500" height="500" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="buttons">
+            <button id="yesBtn" onclick="redirectToTrina()">Yes</button>
+            <button id="noBtn" onclick="growYesButton()">No</button>
+        </div>
+    </div>
+    
+    <div id="trina" class="container" style="display: none;">
+        <h2>Yay!</h2>
+        <div class="filmstrip">
+            <img src="image1.jpg" alt="Pic 1">
+            <img src="image2.jpg" alt="Pic 2">
+            <img src="image3.jpg" alt="Pic 3">
+        </div>
+    </div>
+    
+    <script>
+        function redirectToTrina() {
+            window.location.hash = "#trina";
+            document.getElementById("trina").style.display = "block";
+            document.getElementById("home").style.display = "none";
+            
+            setActive(document.querySelector("a[href='#trina']"));
+            document.getElementById("trinaLink").style.pointerEvents = "auto";
+            document.getElementById("trinaLink").style.opacity = "1";
+            
+            document.getElementById("homeLink").style.pointerEvents = "none";
+            document.getElementById("homeLink").style.opacity = "0.5";
+            
+            resetYesButton();
+        }
+
+        function growYesButton() {
+            let yesBtn = document.getElementById("yesBtn");
+            let currentSize = window.getComputedStyle(yesBtn).fontSize;
+            let newSize = parseFloat(currentSize) * 1.2 + "px";
+            yesBtn.style.fontSize = newSize;
+
+            let questionElement = document.getElementById("question");
+            let currentText = questionElement.textContent;
+
+            
+            if (currentText.includes("really")) {
+                questionElement.textContent = currentText.replace("sure?", "really sure?");
+            } else {
+                questionElement.textContent = "Are you really sure?";
+            }
+
+                
+            let gifContainer = document.getElementById("gif");
+            gifContainer.innerHTML = `<iframe src="https://tenor.com/embed/7624556145484517847" width="500" height="500" frameborder="0" allowfullscreen></iframe>`;
+        }
+
+
+        function resetYesButton() {
+            document.getElementById("yesBtn").style.fontSize = "20px";
+            document.getElementById("question").textContent = "Can you be my Valentine?";
+
+            let gifContainer = document.getElementById("gif");
+            gifContainer.innerHTML = `<iframe src="https://tenor.com/embed/12962892" width="250" height="250" frameborder="0" allowfullscreen></iframe>`;
+        }
+
+
+        function setActive(element) {
+            document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
+            element.classList.add("active");
+        }
+        document.addEventListener("mousemove", (event) => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "💜";
+        document.body.appendChild(heart);
+        
+        heart.style.left = `${event.clientX}px`;
+        heart.style.top = `${event.clientY}px`;
+        
+        setTimeout(() => {
+            heart.style.opacity = "10";
+            heart.style.transform = "scale(1.5)";
+        }, 150);
+        
+        setTimeout(() => {
+            heart.remove();
+        }, 600);
+    });
+
+    const style = document.createElement("style");
+    style.innerHTML = `
+        .heart {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            pointer-events: none;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+    `;
+    document.head.appendChild(style);
+
+    </script>
+</body>
+</html>
