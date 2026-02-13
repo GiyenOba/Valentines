@@ -254,6 +254,8 @@ button {
 
 .celebration-wrapper {
     animation: zoomInOut 3s ease-in-out infinite !important;
+    margin-top: 70px;
+    padding-top: 10px;
 }
 
 .celebration-container {
@@ -917,3 +919,4 @@ button {
         background: white;
     }
 }
+
