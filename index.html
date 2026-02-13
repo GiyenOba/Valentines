@@ -14,10 +14,10 @@
     
     <div id="home" class="container">
         <div class="content-wrapper">
-            <h1 id="question">Will you be my Valentine?</h1>
+            <h1 id="question">WILL YOU BE MY VALENTINE FOR THE 2ND TIME?</h1>
             <div class="gif-container">
                 <div id="gif">
-                    <iframe src="https://tenor.com/embed/12962892" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+                    <iframe src="https://tenor.com/embed/17729132519060511839" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
             <div class="buttons">
@@ -28,17 +28,17 @@
     </div>
     
     <div id="trina" class="container" style="display: none;">
-        <div class="content-wrapper">
-            <h1 class="success-message">Yeeeeey! Thank you Bb I LOVE YOU!! 💕💕</h1>
+        <div class="strobe-flash"></div>
+        <div class="disco-ball"></div>
+        <div class="spotlight spotlight-1"></div>
+        <div class="spotlight spotlight-2"></div>
+        <div class="spotlight spotlight-3"></div>
+        <div class="party-lights"></div>
+        <div class="party-lights party-lights-2"></div>
+        <div class="content-wrapper celebration-wrapper">
+            <h1 class="success-message">ANG MAIBA'Y BADING- SUN TZU</h1>
             <div class="celebration-container">
                 <iframe class="celebration-gif" src="https://tenor.com/embed/22285495" allowfullscreen></iframe>
-            </div>
-            <div class="photos-grid">
-                <img src="bb6.jpg" alt="Us 1">
-                <img src="bb12.jpg" alt="Us 2">
-                <img src="bb2.jpg" alt="Us 3">
-                <img src="bb9.jpg" alt="Us 4">
-                <img src="bb11.jpg" alt="Us 5">
             </div>
         </div>
     </div>
@@ -48,6 +48,12 @@
         let noBtnContainer = null;
 
         function redirectToTrina() {
+            // Play celebration music on loop
+            const audio = new Audio('celebration-music.mp3');
+            audio.volume = 0.5;
+            audio.loop = true; // Loop the music
+            audio.play().catch(err => console.log('Audio play failed:', err));
+            
             window.location.hash = "#trina";
             document.getElementById("trina").style.display = "block";
             document.getElementById("home").style.display = "none";
@@ -61,8 +67,27 @@
             
             resetYesButton();
             
-            // Create confetti effect
+            // Start continuous party effects
+            startPartyMode();
+        }
+
+        let partyInterval = null;
+
+        function startPartyMode() {
+            // Initial confetti burst
             createConfetti();
+            
+            // Continue creating confetti every 3 seconds
+            partyInterval = setInterval(() => {
+                createConfetti();
+            }, 3000);
+        }
+
+        function stopPartyMode() {
+            if (partyInterval) {
+                clearInterval(partyInterval);
+                partyInterval = null;
+            }
         }
 
         function handleNoClick() {
@@ -79,7 +104,7 @@
             
             // Change question text
             const questions = [
-                "Are you really sure?",
+                "QUACK QUACK NO LUCK?",
                 "Are you really really sure?",
                 "Think again! Pretty please? 🥺",
                 "Are you absolutely certain?",
@@ -89,10 +114,6 @@
             if (noClickCount <= questions.length) {
                 questionElement.textContent = questions[noClickCount - 1];
             }
-            
-            // Change gif to sad one
-            let gifContainer = document.getElementById("gif");
-            gifContainer.innerHTML = `<iframe src="https://tenor.com/embed/7624556145484517847" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
             
             // After first click, create the floating button
             if (noClickCount === 1) {
@@ -107,17 +128,38 @@
             // Hide original no button
             noBtn.style.display = "none";
             
-            // Create container for button on gif
+            // Clear and hide the main gif
+            gifContainer.innerHTML = "";
+            gifContainer.style.background = "transparent";
+            gifContainer.style.boxShadow = "none";
+            
+            // Create container for button with duck gif on gif
             noBtnContainer = document.createElement("div");
             noBtnContainer.className = "floating-no-container";
-            noBtnContainer.innerHTML = '<button class="floating-no-btn">No</button>';
+            noBtnContainer.innerHTML = `
+                <div class="cat-button-combo">
+                    <button class="floating-no-btn">No</button>
+                    <div class="running-cat-container">
+                        <iframe src="https://tenor.com/embed/4093922059927037978" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `;
             
+            // Add the duck and button to the container
             gifContainer.style.position = "relative";
             gifContainer.appendChild(noBtnContainer);
             
-            // Add hover event to make it teleport
+            // Add hover event to the button itself to make it teleport and play quack sound
             const floatingBtn = noBtnContainer.querySelector(".floating-no-btn");
-            floatingBtn.addEventListener("mouseenter", teleportButton);
+            floatingBtn.addEventListener("mouseenter", () => {
+                // Play quack sound
+                const quackSound = new Audio('quack.mp3');
+                quackSound.volume = 0.6;
+                quackSound.play().catch(err => console.log('Quack sound failed:', err));
+                
+                // Teleport button
+                teleportButton();
+            });
         }
 
         function teleportButton() {
@@ -126,15 +168,21 @@
             const gifContainer = document.getElementById("gif");
             const containerRect = gifContainer.getBoundingClientRect();
             
-            // Random position within the gif area
-            const maxX = containerRect.width - 80; // button width
-            const maxY = containerRect.height - 40; // button height
+            // Calculate button dimensions (approximate)
+            const buttonWidth = 100;
+            const buttonHeight = 150; // button + duck height
             
-            const randomX = Math.random() * maxX;
-            const randomY = Math.random() * maxY;
+            // Random position within the gif area with padding to stay inside
+            const padding = 20;
+            const maxX = containerRect.width - buttonWidth - padding;
+            const maxY = containerRect.height - buttonHeight - padding;
+            
+            const randomX = Math.max(padding, Math.random() * maxX);
+            const randomY = Math.max(padding, Math.random() * maxY);
             
             noBtnContainer.style.left = randomX + "px";
             noBtnContainer.style.top = randomY + "px";
+            noBtnContainer.style.transform = "translate(0, 0)"; // Override centering transform
             
             // Add bounce animation
             noBtnContainer.style.animation = "none";
@@ -157,8 +205,11 @@
                 noBtnContainer = null;
             }
 
+            // Restore the original gif
             let gifContainer = document.getElementById("gif");
             gifContainer.innerHTML = `<iframe src="https://tenor.com/embed/12962892" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
+            gifContainer.style.background = "";
+            gifContainer.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.2)";
         }
 
         function setActive(element) {
@@ -167,41 +218,70 @@
         }
 
         function createConfetti() {
-            const colors = ['#ff6b9d', '#c44569', '#f8b500', '#ffa801', '#f85032'];
-            const confettiCount = 100;
+            const colors = ['#ff6b9d', '#c44569', '#f8b500', '#ffa801', '#f85032', '#667eea', '#764ba2'];
+            const shapes = ['❤️', '💕', '💜', '💖', '⭐', '✨', '🎉'];
+            const confettiCount = 150;
             
             for (let i = 0; i < confettiCount; i++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
                     confetti.style.left = Math.random() * 100 + '%';
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    // Mix of colored squares and emoji
+                    if (Math.random() > 0.5) {
+                        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    } else {
+                        confetti.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
+                        confetti.style.fontSize = '20px';
+                    }
+                    
                     confetti.style.animationDelay = Math.random() * 3 + 's';
                     confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
                     document.body.appendChild(confetti);
                     
                     setTimeout(() => confetti.remove(), 5000);
-                }, i * 30);
+                }, i * 20);
             }
         }
 
-        // Floating hearts on mouse move
+        // Floating hearts with sparkles on mouse move
+        let lastHeartTime = 0;
         document.addEventListener("mousemove", (event) => {
-            if (Math.random() > 0.85) { // Only create hearts 15% of the time
+            const now = Date.now();
+            if (now - lastHeartTime > 100) { // Create heart every 100ms
+                lastHeartTime = now;
+                
                 const heart = document.createElement("div");
                 heart.classList.add("heart");
-                heart.innerHTML = "💜";
+                
+                // Alternate between different heart styles
+                const heartTypes = ['❤️', '💕', '💖', '💗', '💓', '💝'];
+                heart.innerHTML = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+                
                 document.body.appendChild(heart);
                 
                 heart.style.left = `${event.clientX}px`;
                 heart.style.top = `${event.clientY}px`;
                 
+                // Add sparkles around the heart
+                if (Math.random() > 0.5) {
+                    const sparkle = document.createElement("div");
+                    sparkle.classList.add("sparkle");
+                    sparkle.innerHTML = "✨";
+                    sparkle.style.left = `${event.clientX + (Math.random() * 30 - 15)}px`;
+                    sparkle.style.top = `${event.clientY + (Math.random() * 30 - 15)}px`;
+                    document.body.appendChild(sparkle);
+                    
+                    setTimeout(() => sparkle.remove(), 1000);
+                }
+                
                 setTimeout(() => {
                     heart.style.opacity = "0";
-                    heart.style.transform = "translateY(-50px) scale(1.5)";
+                    heart.style.transform = "translateY(-80px) scale(1.5) rotate(15deg)";
                 }, 10);
                 
-                setTimeout(() => heart.remove(), 1000);
+                setTimeout(() => heart.remove(), 1500);
             }
         });
     </script>
